@@ -6,19 +6,24 @@
 * bottom of the html body tag
 
 * create a html canvas element with an id selector
+* note the width and height can be adjusted but will affect game play
 * <canvas id="gameCanvas" width="800px" height="600px"></canvas>
 
-
 ***********************************************/
-//IIFE to load the game canvas
+
+//IIFE to load the game and encapsuleate the methods of game
 (function() {
 
     console.log("Loading Game");
 
     // waits for the window to run before starting the game
     window.onload = function() {
+        //initalize the gamw object and get the html canvas element 
         var game = new Game().loadCanvas('gameCanvas');
        
+        //run the game
+        //TODO: birng up the start screen befor running the game
+        //wait for mouse click to start game
         game.run();
         
         //set the paddle position by mouse cursor
@@ -27,6 +32,7 @@
             game.paddle1Y = mousePos.y - (game.PADDLE_HEIGHT/2);
         });
         
+        //event listener waiting for a mouse click to continue 
         game.canvas.addEventListener('mousedown', function(e){
             //reset the score
             game.playerScore = 0;
@@ -75,18 +81,21 @@
     };
     
     Game.prototype.run = function() {
+        //set this to self to clean up JS this access issues in function
         var self = this;
-        //set the interval at which the canvas refreshes
+        //clears any pre-existing interval
         clearInterval(this.interval);
+        //set the interval at which the canvas refreshes
         this.interval = setInterval(function() {
-                self.play();	
+                //calling self as this is now global
+                self.drawBoard();	
             }, self.fps);
         
         return self;
     }
     
     //runs the game
-    Game.prototype.play = function() {
+    Game.prototype.drawBoard = function() {
         // next line blanks out the screen with black
         this.drawRectangle(0, 0, this.canvas.width, this.canvas.height, 'black');
         // this is left player paddle
